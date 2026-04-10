@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Music Generator</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0a0a0f;
+    color: #e2e8f0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    min-height: 100vh;
+    padding: 32px 20px;
+  }
+
+  h1 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #a78bfa;
+    margin-bottom: 6px;
+    letter-spacing: -0.3px;
+  }
+
+  .subtitle {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 32px;
+  }
+
+  .card {
+    background: #111118;
+    border: 1px solid #1e1e2e;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+
+  label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 8px;
+  }
+
+  .pill-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .pill {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid #2a2a3e;
+    background: #16161f;
+    color: #94a3b8;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+
+  .pill:hover { border-color: #7c3aed; color: #c4b5fd; }
+  .pill.active { background: #2e1065; border-color: #7c3aed; color: #c4b5fd; font-weight: 500; }
+
+  textarea {
+    width: 100%;
+    background: #0d0d16;
+    border: 1px solid #1e1e2e;
+    border-radius: 8px;
+    color: #e2e8f0;
+    font-size: 14px;
+    line-height: 1.6;
+    padding: 14px;
+    resize: vertical;
+    min-height: 90px;
+    outline: none;
+    font-family: inherit;
+    transition: border-color 0.15s;
+  }
+
+  textarea:focus { border-color: #7c3aed; }
+
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .field { display: flex; flex-direction: column; }
+
+  input[type="range"] {
+    width: 100%;
+    accent-color: #7c3aed;
+    margin: 8px 0 4px;
+  }
+
+  .range-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #475569;
+  }
+
+  .range-val {
+    font-size: 13px;
+    color: #a78bfa;
+    font-weight: 500;
+  }
+
+  input[type="number"], select {
+    background: #0d0d16;
+    border: 1px solid #1e1e2e;
+    border-radius: 8px;
+    color: #e2e8f0;
+    font-size: 14px;
+    padding: 10px 12px;
+    outline: none;
+    width: 100%;
+    font-family: inherit;
+  }
+
+  select option { background: #0d0d16; }
+
+  #prompt-preview {
+    background: #0d0d16;
+    border: 1px solid #2a2a3e;
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 13px;
+    color: #7c3aed;
+    line-height: 1.6;
+    min-height: 60px;
+    word-break: break-word;
+    font-style: italic;
+  }
+
+  #lyrics-box {
+    width: 100%;
+    background: #0d0d16;
+    border: 1px solid #1e1e2e;
+    border-radius: 8px;
+    color: #e2e8f0;
+    font-size: 13px;
+    line-height: 1.7;
+    padding: 14px;
+    resize: vertical;
+    min-height: 100px;
+    outline: none;
+    font-family: inherit;
+  }
+
+  .generate-btn {
+    width: 100%;
+    padding: 16px;
+    background: #7c3aed;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.2px;
+    transition: background 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .generate-btn:hover { background: #6d28d9; }
+  .generate-btn:disabled { background: #2d1b69; color: #6d28d9; cursor: not-allowed; }
+
+  #status {
+    margin-top: 16px;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    display: none;
+  }
+
+  #status.info { background: #0f172a; border: 1px solid #1e293b; color: #94a3b8; display: block; }
+  #status.success { background: #052e16; border: 1px solid #166534; color: #86efac; display: block; }
+  #status.error { background: #2d0000; border: 1px solid #7f1d1d; color: #fca5a5; display: block; }
+
+  .history-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 8px;
+    background: #0d0d16;
+    border: 1px solid #1e1e2e;
+    margin-bottom: 8px;
+  }
+
+  .history-item audio { flex: 1; height: 36px; }
+
+  .history-name {
+    font-size: 12px;
+    color: #64748b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+  }
+
+  .spinner {
+    width: 18px; height: 18px;
+    border: 2px solid rgba(255,255,255,0.2);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: none;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .section-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 12px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Music Generator</h1>
+<p class="subtitle">ACE-Step 1.5 &nbsp;·&nbsp; M4 Max &nbsp;·&nbsp; MLX backend</p>
+
+<!-- Genre -->
+<div class="card">
+  <div class="section-title">Genre</div>
+  <div class="pill-group" id="genre-pills">
+    <span class="pill" data-val="hip hop">Hip Hop</span>
+    <span class="pill" data-val="lo-fi hip hop">Lo-Fi</span>
+    <span class="pill" data-val="trap">Trap</span>
+    <span class="pill" data-val="drill">Drill</span>
+    <span class="pill" data-val="r&b">R&B</span>
+    <span class="pill" data-val="pop">Pop</span>
+    <span class="pill" data-val="electronic">Electronic</span>
+    <span class="pill" data-val="ambient">Ambient</span>
+    <span class="pill" data-val="jazz">Jazz</span>
+    <span class="pill" data-val="cinematic">Cinematic</span>
+    <span class="pill" data-val="rock">Rock</span>
+    <span class="pill" data-val="house">House</span>
+    <span class="pill" data-val="soul">Soul</span>
+    <span class="pill" data-val="reggaeton">Reggaeton</span>
+    <span class="pill" data-val="afrobeats">Afrobeats</span>
+  </div>
+
+  <div class="section-title">Mood</div>
+  <div class="pill-group" id="mood-pills">
+    <span class="pill" data-val="dark">Dark</span>
+    <span class="pill" data-val="melancholic">Melancholic</span>
+    <span class="pill" data-val="aggressive">Aggressive</span>
+    <span class="pill" data-val="uplifting">Uplifting</span>
+    <span class="pill" data-val="chill">Chill</span>
+    <span class="pill" data-val="dreamy">Dreamy</span>
+    <span class="pill" data-val="romantic">Romantic</span>
+    <span class="pill" data-val="energetic">Energetic</span>
+    <span class="pill" data-val="mysterious">Mysterious</span>
+    <span class="pill" data-val="nostalgic">Nostalgic</span>
+  </div>
+
+  <div class="section-title">Instruments</div>
+  <div class="pill-group" id="instrument-pills">
+    <span class="pill" data-val="808 bass">808 Bass</span>
+    <span class="pill" data-val="piano">Piano</span>
+    <span class="pill" data-val="acoustic guitar">Acoustic Guitar</span>
+    <span class="pill" data-val="electric guitar">Electric Guitar</span>
+    <span class="pill" data-val="synth pads">Synth Pads</span>
+    <span class="pill" data-val="strings">Strings</span>
+    <span class="pill" data-val="brass">Brass</span>
+    <span class="pill" data-val="trap hi-hats">Trap Hi-hats</span>
+    <span class="pill" data-val="vinyl crackle">Vinyl Crackle</span>
+    <span class="pill" data-val="choir">Choir</span>
+    <span class="pill" data-val="flute">Flute</span>
+    <span class="pill" data-val="saxophone">Saxophone</span>
+  </div>
+
+  <div class="section-title">Extra Details (optional freeform)</div>
+  <textarea id="extra-desc" placeholder="e.g. rain sounds, late night city vibes, aggressive energy, commercial quality..."></textarea>
+</div>
+
+<!-- Parameters -->
+<div class="card">
+  <div class="row">
+    <div class="field">
+      <label>Duration (seconds)</label>
+      <input type="range" id="duration" min="15" max="240" value="60" step="5"
+             oninput="document.getElementById('dur-val').textContent=this.value+'s'">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span class="range-labels"><span>15s</span></span>
+        <span class="range-val" id="dur-val">60s</span>
+        <span class="range-labels"><span>240s</span></span>
+      </div>
+    </div>
+    <div class="field">
+      <label>BPM (0 = auto)</label>
+      <input type="number" id="bpm" value="0" min="0" max="200" step="1" placeholder="auto">
+    </div>
+    <div class="field">
+      <label>Key</label>
+      <select id="key">
+        <option value="">Auto</option>
+        <option>C major</option><option>C minor</option>
+        <option>D major</option><option>D minor</option>
+        <option>E major</option><option>E minor</option>
+        <option>F major</option><option>F minor</option>
+        <option>G major</option><option>G minor</option>
+        <option>A major</option><option>A minor</option>
+        <option>B major</option><option>B minor</option>
+        <option>C# minor</option><option>F# minor</option>
+        <option>Bb major</option><option>Eb major</option>
+      </select>
+    </div>
+  </div>
+
+  <label>Lyrics (optional)</label>
+  <textarea id="lyrics-box" placeholder="Verse 1:&#10;...&#10;&#10;Chorus:&#10;..."></textarea>
+</div>
+
+<!-- Preview & Generate -->
+<div class="card">
+  <div class="section-title">Generated Prompt Preview</div>
+  <div id="prompt-preview">Select genre, mood, and instruments above...</div>
+  <br>
+  <button class="generate-btn" id="gen-btn" onclick="generate()">
+    <div class="spinner" id="spinner"></div>
+    <span id="btn-text">Generate Music</span>
+  </button>
+  <div id="status"></div>
+</div>
+
+<!-- History -->
+<div class="card" id="history-card" style="display:none">
+  <div class="section-title">Generated This Session</div>
+  <div id="history-list"></div>
+</div>
+
+<script>
+const ACE_STEP_URL = "http://127.0.0.1:7860";
+
+// Pill selection
+document.querySelectorAll(".pill-group").forEach(group => {
+  group.querySelectorAll(".pill").forEach(pill => {
+    pill.addEventListener("click", () => {
+      pill.classList.toggle("active");
+      updatePreview();
+    });
+  });
+});
+
+document.getElementById("extra-desc").addEventListener("input", updatePreview);
+
+function getSelected(groupId) {
+  return [...document.querySelectorAll(`#${groupId} .pill.active`)]
+    .map(p => p.dataset.val);
+}
+
+function updatePreview() {
+  const genres = getSelected("genre-pills");
+  const moods = getSelected("mood-pills");
+  const instruments = getSelected("instrument-pills");
+  const extra = document.getElementById("extra-desc").value.trim();
+
+  const parts = [];
+  if (genres.length) parts.push(genres.join(", "));
+  if (moods.length) parts.push(moods.join(", "));
+  if (instruments.length) parts.push(instruments.join(", "));
+  if (extra) parts.push(extra);
+
+  const preview = parts.length
+    ? parts.join(", ")
+    : "Select genre, mood, and instruments above...";
+
+  document.getElementById("prompt-preview").textContent = preview;
+}
+
+function buildPrompt() {
+  const genres = getSelected("genre-pills");
+  const moods = getSelected("mood-pills");
+  const instruments = getSelected("instrument-pills");
+  const extra = document.getElementById("extra-desc").value.trim();
+  const parts = [...genres, ...moods, ...instruments];
+  if (extra) parts.push(extra);
+  return parts.join(", ");
+}
+
+function setStatus(msg, type) {
+  const el = document.getElementById("status");
+  el.textContent = msg;
+  el.className = type;
+}
+
+function setLoading(on) {
+  const btn = document.getElementById("gen-btn");
+  const spinner = document.getElementById("spinner");
+  const txt = document.getElementById("btn-text");
+  btn.disabled = on;
+  spinner.style.display = on ? "block" : "none";
+  txt.textContent = on ? "Generating..." : "Generate Music";
+}
+
+async function generate() {
+  const prompt = buildPrompt();
+  if (!prompt || prompt === "Select genre, mood, and instruments above...") {
+    setStatus("Pick at least one genre, mood, or instrument.", "error");
+    return;
+  }
+
+  const duration = parseInt(document.getElementById("duration").value);
+  const bpm = parseInt(document.getElementById("bpm").value) || null;
+  const key = document.getElementById("key").value || null;
+  const lyrics = document.getElementById("lyrics-box").value.trim();
+
+  setLoading(true);
+  setStatus("Submitting to ACE-Step...", "info");
+
+  try {
+    // ACE-Step Gradio runs as a Gradio app - use its /run/predict API
+    // We call the generate endpoint via the Gradio queue API
+    const payload = {
+      data: [
+        prompt,        // caption
+        lyrics,        // lyrics
+        null,          // audio input (none for text2music)
+        null,          // audio end
+        "text2music",  // task
+        duration,      // duration
+        bpm,           // bpm
+        key,           // key
+        null,          // time_signature
+        null,          // vocal_language
+        false,         // think checkbox
+        false,         // use_format
+        20,            // inference_steps
+        7.0,           // guidance_scale
+        1,             // batch_size (1 at a time from here)
+        -1,            // seed (-1 = random)
+        "mp3",         // audio_format
+        320,           // mp3_bitrate
+        44100,         // mp3_sample_rate
+      ]
+    };
+
+    // Try the Gradio API
+    const queueRes = await fetch(`${ACE_STEP_URL}/queue/join`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...payload, fn_index: 0, session_hash: Math.random().toString(36).slice(2) })
+    });
+
+    if (!queueRes.ok) throw new Error(`HTTP ${queueRes.status}`);
+
+    setStatus("Queued. Generating... (this takes 10-30s on M4 Max)", "info");
+
+    // Poll for result via SSE
+    const data = await queueRes.json();
+    const hash = data.event_id || data.hash;
+
+    // Wait and poll
+    await pollResult(hash, prompt, duration);
+
+  } catch (err) {
+    setStatus(`Error: ${err.message}. Make sure ACE-Step is running at ${ACE_STEP_URL}`, "error");
+    setLoading(false);
+  }
+}
+
+async function pollResult(eventId, prompt, duration) {
+  const maxWait = (duration * 2 + 60) * 1000;
+  const start = Date.now();
+
+  while (Date.now() - start < maxWait) {
+    await new Promise(r => setTimeout(r, 3000));
+
+    try {
+      const res = await fetch(`${ACE_STEP_URL}/queue/status`);
+      if (res.ok) {
+        const status = await res.json();
+        const elapsed = Math.round((Date.now() - start) / 1000);
+        setStatus(`Generating... ${elapsed}s elapsed`, "info");
+      }
+    } catch (_) {}
+
+    // Check if new file appeared in musicv1 listing (via a helper endpoint we don't have)
+    // Best we can do is redirect user to the Gradio UI for playback
+    if (Date.now() - start > 15000) {
+      setStatus(
+        `Generation running. Check ACE-Step at ${ACE_STEP_URL} for the result, or find your file in musicv1/.`,
+        "success"
+      );
+      setLoading(false);
+
+      addToHistory(prompt);
+      return;
+    }
+  }
+
+  setStatus("Timed out waiting for result. Check musicv1/ for your file.", "error");
+  setLoading(false);
+}
+
+function addToHistory(prompt) {
+  const card = document.getElementById("history-card");
+  const list = document.getElementById("history-list");
+  card.style.display = "block";
+
+  const item = document.createElement("div");
+  item.className = "history-item";
+  item.innerHTML = `
+    <div style="flex:1">
+      <div style="font-size:13px;color:#c4b5fd;margin-bottom:2px">${prompt.slice(0, 80)}${prompt.length > 80 ? '...' : ''}</div>
+      <div style="font-size:11px;color:#475569">${new Date().toLocaleTimeString()}</div>
+    </div>
+  `;
+  list.prepend(item);
+}
+</script>
+</body>
+</html>

@@ -13,10 +13,13 @@ from pathlib import Path
 
 import customtkinter as ctk
 from gradio_client import Client
+from PIL import Image, ImageTk
 
 ACE_STEP_URL = "http://127.0.0.1:7860"
 MUSIC_DIR = Path.home() / "Desktop" / "musicv1"
 MUSIC_DIR.mkdir(exist_ok=True)
+GENERATE_COVER = Path(__file__).parent / "generate_cover.py"
+COVER_PYTHON = Path(__file__).parent / ".venv_flux" / "bin" / "python3.12"
 
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("dark-blue")
@@ -355,6 +358,30 @@ class MusicApp(ctk.CTk):
         self.gen_btn.configure(state="normal", text="Generate")
         self._generating = False
         self._add_track(path, prompt)
+        # Generate cover art in background
+        threading.Thread(
+            target=self._generate_cover,
+            args=(path, prompt),
+            daemon=True
+        ).start()
+
+    def _generate_cover(self, audio_path: Path, prompt: str):
+        cover_path = audio_path.with_suffix(".png")
+        if cover_path.exists():
+            return
+        self.after(0, lambda: self._set_progress("Generating cover art...", 0.5))
+        try:
+            result = subprocess.run(
+                [str(COVER_PYTHON), str(GENERATE_COVER), prompt, str(cover_path)],
+                capture_output=True, text=True, timeout=300
+            )
+            if result.returncode == 0 and cover_path.exists():
+                self.after(0, lambda: self._set_progress(f"Cover art saved: {cover_path.name}", 1.0))
+                self.after(0, lambda: self._refresh_track_cover(audio_path, cover_path))
+            else:
+                self.after(0, lambda: self._set_progress("Cover art failed - check logs", 0))
+        except Exception as e:
+            self.after(0, lambda: self._set_progress(f"Cover error: {str(e)[:80]}", 0))
 
     def _on_error(self, msg: str):
         self._set_progress(f"Error: {msg}", 0)
@@ -390,25 +417,58 @@ class MusicApp(ctk.CTk):
             corner_radius=8,
         )
         row.pack(fill="x", pady=3)
+        row._audio_path = path  # store for cover refresh
+
+        # Thumbnail (48x48) - show cover if exists, placeholder if not
+        cover_path = path.with_suffix(".png")
+        thumb_label = ctk.CTkLabel(row, text="", width=48, height=48)
+        thumb_label.pack(side="left", padx=(8, 0), pady=6)
+        self._set_thumb(thumb_label, cover_path)
 
         ctk.CTkLabel(
             row,
-            text=path.name,
+            text=path.stem[:48],
             font=ctk.CTkFont(size=12),
             text_color="#c4b5fd",
             anchor="w"
-        ).pack(side="left", padx=12, pady=8, fill="x", expand=True)
+        ).pack(side="left", padx=10, pady=8, fill="x", expand=True)
 
         ctk.CTkButton(
-            row, text="▶ Play",
-            width=70, height=28,
+            row, text="▶",
+            width=36, height=28,
             corner_radius=6,
             fg_color="#1e1e2e",
             hover_color="#2a2a3e",
-            font=ctk.CTkFont(size=11),
+            font=ctk.CTkFont(size=13),
             text_color="#94a3b8",
             command=lambda p=path: subprocess.run(["open", str(p)])
         ).pack(side="right", padx=8)
+
+    def _set_thumb(self, label: ctk.CTkLabel, cover_path: Path):
+        """Load cover image into label, or show purple placeholder."""
+        if cover_path.exists():
+            try:
+                img = Image.open(cover_path).resize((48, 48), Image.LANCZOS)
+                ctk_img = ctk.CTkImage(img, size=(48, 48))
+                label.configure(image=ctk_img, text="")
+                label._ctk_image = ctk_img  # prevent GC
+                return
+            except Exception:
+                pass
+        # Placeholder - purple square
+        img = Image.new("RGB", (48, 48), "#2d0a5e")
+        ctk_img = ctk.CTkImage(img, size=(48, 48))
+        label.configure(image=ctk_img, text="")
+        label._ctk_image = ctk_img
+
+    def _refresh_track_cover(self, audio_path: Path, cover_path: Path):
+        """Update thumbnail in track list once cover is ready."""
+        for widget in self.track_list.winfo_children():
+            if getattr(widget, "_audio_path", None) == audio_path:
+                for child in widget.winfo_children():
+                    if isinstance(child, ctk.CTkLabel) and child.cget("width") == 48:
+                        self._set_thumb(child, cover_path)
+                        break
 
 
 if __name__ == "__main__":

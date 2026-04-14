@@ -133,90 +133,185 @@ blockquote::before { content:'\201C'; position:absolute; left:0; top:-10px; font
 <div id="slides">
 <div class="slide active" id="slide-1">
     
-    <div class="blob" style="width:466.91211952452306px;height:471.1762659845208px;background:var(--primary);top:-153.66103071862204px;left:-66.63949628031367px;opacity:0.07"></div>
-    <div class="blob" style="width:329.3928984782879px;height:315.01799615995435px;background:var(--accent);bottom:-94.02616545498296px;right:-55.5945185117391px;opacity:0.06"></div>
+    <div class="blob" style="width:432.02635865631345px;height:465.9106897359454px;background:var(--primary);top:-127.38041800414939px;left:-62.495310606963635px;opacity:0.07"></div>
+    <div class="blob" style="width:427.72652472174025px;height:425.2469127016237px;background:var(--accent);bottom:-62.03830016485875px;left:-53.85216078660015px;opacity:0.06"></div>
     <div class="slide-content">
       <div class="hero-badge">ARC Web</div>
-      <h1>ARC Music<br><span class="grad">Local AI Music</span></h1>
-      <div class="sub">Generate music locally using Replicate AI — no API keys, no cloud calls, your music stays local.</div>
-      <div class="tags-row"><span class="tag">Python</span><span class="tag">Music</span><span class="tag">Open Source</span></div>
+      <h1>ARC Music<br><span class="grad">Python</span></h1>
+      <div class="sub"><a href="https://arc-web.github.io/ARC-Music/"></div>
+      <div class="tags-row"><span class="tag">Python</span><span class="tag">Open Source</span></div>
     </div>
   </div>
 
 <div class="slide" id="slide-2">
     
-    <div class="blob" style="width:407.9273948937649px;height:558.0013666150969px;background:var(--primary);top:-145.8970172247719px;right:-62.194870981435216px;opacity:0.07"></div>
-    <div class="blob" style="width:426.5349661081174px;height:323.96124533538125px;background:var(--accent);bottom:-70.11030313199923px;left:-60.0859072082348px;opacity:0.06"></div>
+    <div class="blob" style="width:419.4763119478347px;height:477.5055918375845px;background:var(--primary);top:-156.22373134635484px;right:-80.68693755829231px;opacity:0.07"></div>
+    <div class="blob" style="width:316.87037167273513px;height:394.5278209066384px;background:var(--accent);bottom:-103.01395682967016px;right:-73.01012223552397px;opacity:0.06"></div>
     <div class="slide-content">
-      <div class="eyebrow">What it does</div>
-      <h2>Music <span class="grad">generation</span></h2>
+      <div class="eyebrow">The problem</div>
+      <h2>What's <span class="grad">broken</span> without this</h2>
       <div class="line"></div>
       <div class="cards">
     <div class="card">
-      <span class="card-icon">🎵</span>
-      <div class="card-title">Describe your song</div>
-      <div class="card-desc">Tell the AI what you want — style, mood, instruments — it generates it.</div>
+      <span class="card-icon">😤</span>
+      <div class="card-title">Music generation needs GPU</div>
+      <div class="card-desc">Most music AI requires expensive cloud APIs or high-end hardware, making iteration costly and slow for developers.</div>
     </div>
     <div class="card">
-      <span class="card-icon">⚡</span>
-      <div class="card-title">Local processing</div>
-      <div class="card-desc">Replicate handles generation but respects your privacy — no tracking.</div>
+      <span class="card-icon">💸</span>
+      <div class="card-title">Per-generation API fees</div>
+      <div class="card-desc">Commercial music generation services charge per output, making experimentation and batch workflows prohibitively expensive.</div>
     </div>
     <div class="card">
-      <span class="card-icon">🎧</span>
-      <div class="card-title">Download & use</div>
-      <div class="card-desc">Get high-quality audio files you can edit, remix, or publish.</div>
-    </div>
-    <div class="card">
-      <span class="card-icon">🎼</span>
-      <div class="card-title">Iterate easily</div>
-      <div class="card-desc">Tweak descriptions and regenerate until you like what you hear.</div>
+      <span class="card-icon">🔁</span>
+      <div class="card-title">Limited audio control</div>
+      <div class="card-desc">Existing tools generate full tracks but can't selectively edit regions, extract timing metadata, or separate stems without external tools.</div>
     </div></div>
     </div>
   </div>
 
 <div class="slide" id="slide-3">
     
-    <div class="blob" style="width:548.9655876131903px;height:536.0497847218073px;background:var(--primary);top:-110.24951399386657px;right:-110.00124016000696px;opacity:0.07"></div>
-    <div class="blob" style="width:363.65863693505725px;height:394.81417705328226px;background:var(--accent);bottom:-109.59481802580169px;right:-74.28091084634815px;opacity:0.06"></div>
+    <div class="blob" style="width:580.61058989976px;height:424.58098336177693px;background:var(--primary);top:-123.13851782406743px;left:-70.04361979594648px;opacity:0.07"></div>
+    <div class="blob" style="width:424.0140714010229px;height:327.32718306646433px;background:var(--accent);bottom:-89.06560066231259px;left:-77.91279843219806px;opacity:0.06"></div>
     <div class="slide-content">
-      <div class="eyebrow">Get started</div>
-      <h2>Generate <span class="grad">music</span></h2>
+      <div class="eyebrow">The difference</div>
+      <h2>Why it <span class="grad">matters</span></h2>
       
-      <div class="steps">
-    <div class="step">
-      <div class="step-num">1</div>
-      <div class="step-text"><strong>Install ARC Music</strong> - Clone repo, install Python deps.</div>
+      <div class="compare">
+        <div class="compare-col bad">
+      <div class="compare-head"><span class="cross">✗</span> Without</div>
+      <div class="compare-item">Manual work</div><div class="compare-item">Slow iteration</div><div class="compare-item">Repeated mistakes</div>
     </div>
-    <div class="step">
-      <div class="step-num">2</div>
-      <div class="step-text"><strong>Describe your song</strong> - Genre, mood, instruments, any specific ideas.</div>
+        <div class="compare-col good">
+      <div class="compare-head"><span class="check">✓</span> With this</div>
+      <div class="compare-item">Runs entirely locally—no API calls, no per-generation fees, no rate limits</div><div class="compare-item">Extracts structural metadata (BPM, key, timestamps) automatically instead of requiring separate analysis tools</div><div class="compare-item">Supports selective audio editing and stem separation without leaving the tool or calling external services</div>
     </div>
-    <div class="step">
-      <div class="step-num">3</div>
-      <div class="step-text"><strong>Generate</strong> - AI creates music based on your description.</div>
-    </div>
-    <div class="step">
-      <div class="step-num">4</div>
-      <div class="step-text"><strong>Download & share</strong> - Get the audio file. Use it however you want.</div>
-    </div></div>
+      </div>
     </div>
   </div>
 
 <div class="slide" id="slide-4">
     
-    <div class="blob" style="width:431.5041758874704px;height:464.736381351476px;background:var(--primary);top:-127.27368286945199px;right:-101.7205724137934px;opacity:0.07"></div>
-    <div class="blob" style="width:338.24324212422266px;height:326.90877681569816px;background:var(--accent);bottom:-79.72011008891641px;left:-56.9674773450394px;opacity:0.06"></div>
+    <div class="blob" style="width:532.2909308850933px;height:598.1456911486237px;background:var(--primary);top:-151.6855973589622px;right:-95.50401334954685px;opacity:0.07"></div>
+    <div class="blob" style="width:432.22537328250223px;height:338.3465626946686px;background:var(--accent);bottom:-97.48486695456384px;left:-52.1026778087859px;opacity:0.06"></div>
     <div class="slide-content">
-      <blockquote>Create <span class="grad">music</span> without the instrument skills. ARC Music makes it <span class="grad">possible</span>.</blockquote>
+      <div class="eyebrow">Under the hood</div>
+      <h2>How it <span class="grad">works</span></h2>
+      
+      <div class="flow">
+    <div class="flow-step">
+      <div class="flow-icon" style="background:rgba(123,47,190,0.12);border:1px solid rgba(123,47,190,0.2)">📥</div>
+      <div class="flow-body">
+        <div class="flow-title">Text prompt + optional lyrics</div>
+        <div class="flow-desc">User provides a natural language description (e.g., 'upbeat lo-fi hip hop with soft piano') and optionally passes lyrics in 50+ languages.</div>
+        
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-icon" style="background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.2)">⚙️</div>
+      <div class="flow-body">
+        <div class="flow-title">ACE-Step 1.5 inference</div>
+        <div class="flow-desc">The foundation model generates audio locally, extracting BPM, key, time signature, and lyric timestamps in a single pass. Supports batch generation up to 8 tracks simultaneously.</div>
+        
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-icon" style="background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.2)">📤</div>
+      <div class="flow-body">
+        <div class="flow-title">MP3 + structured metadata</div>
+        <div class="flow-desc">User receives the generated audio file plus extracted metadata (caption, BPM, key, language) for downstream processing or editing.</div>
+        
+      </div>
+    </div></div>
+    </div>
+  </div>
+
+<div class="slide" id="slide-5">
+    
+    <div class="blob" style="width:565.4117154997383px;height:492.3245646888007px;background:var(--primary);top:-139.61276156193054px;left:-112.96990472439654px;opacity:0.07"></div>
+    <div class="blob" style="width:449.0148102140657px;height:380.53195922116714px;background:var(--accent);bottom:-111.93719148782563px;left:-43.55057803396059px;opacity:0.06"></div>
+    <div class="slide-content">
+      <div class="eyebrow">What it does</div>
+      <h2>Core <span class="grad">capabilities</span></h2>
+      <div class="line"></div>
+      <div class="cards">
+    <div class="card">
+      <span class="card-icon">⚡</span>
+      <div class="card-title">Fast</div>
+      <div class="card-desc">Optimized for speed and efficiency.</div>
+    </div>
+    <div class="card">
+      <span class="card-icon">🎯</span>
+      <div class="card-title">Reliable</div>
+      <div class="card-desc">Built to work consistently.</div>
+    </div>
+    <div class="card">
+      <span class="card-icon">🔌</span>
+      <div class="card-title">Integrates</div>
+      <div class="card-desc">Works with your existing tools.</div>
+    </div></div>
+    </div>
+  </div>
+
+<div class="slide" id="slide-6">
+    
+    <div class="blob" style="width:448.38399428972934px;height:464.2803304887914px;background:var(--primary);top:-85.05357263649915px;left:-112.22403065350395px;opacity:0.07"></div>
+    <div class="blob" style="width:331.93335389160575px;height:302.6855872166427px;background:var(--accent);bottom:-95.36089640690653px;left:-46.009087582835534px;opacity:0.06"></div>
+    <div class="slide-content">
+      <blockquote>I can generate a batch of 8 songs with custom lyrics and get back the BPM and key without touching an API or paying per track.</blockquote>
       <div class="line" style="margin-top:48px"></div>
       <div class="sub">arc-web/ARC-Music</div>
+    </div>
+  </div>
+
+<div class="slide" id="slide-7">
+    
+    <div class="blob" style="width:471.99081889577064px;height:417.26528222569704px;background:var(--primary);top:-87.57951090076457px;left:-104.8542074421431px;opacity:0.07"></div>
+    <div class="blob" style="width:409.9430555702611px;height:400.11398220333837px;background:var(--accent);bottom:-112.6394530172135px;right:-62.12578037176833px;opacity:0.06"></div>
+    <div class="slide-content">
+      <div class="eyebrow">Codebase</div>
+      <h2>Built with <span class="grad">care</span></h2>
+      <div class="line"></div>
+      <div class="cards">
+    <div class="card">
+      <span class="card-icon">💻</span>
+      <div class="card-title">Python</div>
+      <div class="card-desc">Built in Python for type safety and reliability.</div>
+    </div>
+    <div class="card">
+      <span class="card-icon">🏗️</span>
+      <div class="card-title">Architecture</div>
+      <div class="card-desc">SDK/Library</div>
+    </div>
+    <div class="card">
+      <span class="card-icon">📦</span>
+      <div class="card-title">Key deps</div>
+      <div class="card-desc">See repository</div>
+    </div>
+    <div class="card">
+      <span class="card-icon">🔓</span>
+      <div class="card-title">Open Source (MIT / PolyForm)</div>
+      <div class="card-desc">Fork it, extend it, ship it. It's yours.</div>
+    </div></div>
+    </div>
+  </div>
+
+<div class="slide" id="slide-8">
+    
+    <div class="blob" style="width:506.25872874299523px;height:502.52629580352163px;background:var(--primary);top:-144.2800309711646px;left:-77.85439199091704px;opacity:0.07"></div>
+    <div class="blob" style="width:432.9315083811224px;height:319.72839045418766px;background:var(--accent);bottom:-65.09606007850317px;left:-72.47971748590511px;opacity:0.06"></div>
+    <div class="slide-content">
+      <div class="eyebrow">Built by</div>
+      <h2>Mike Ensor<br><span class="grad">Arc Web</span></h2>
+      <div class="sub">AI automation, marketing technology, building tools that work.</div>
+      <div class="body-text">Mike builds open-source AI tools for agencies, marketers, and operators who are done waiting for software to catch up. All Arc Web projects are open source by default — fork them, extend them, ship them.</div>
     </div>
   </div>
 </div>
 
 <div id="nav"></div>
-<div id="counter">1 / 4</div>
+<div id="counter">1 / 8</div>
 <div id="hint">\u2190 \u2192 arrow keys to navigate</div>
 
 <script>
